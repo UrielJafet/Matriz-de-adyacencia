@@ -8,6 +8,9 @@
 *.a
 *.lib
 
+# Archivos 
+*.txt
+
 # Archivos intermedios y de depuración
 *.log
 *.pch
