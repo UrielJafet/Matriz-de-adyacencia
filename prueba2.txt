@@ -1,0 +1,4 @@
+Paris Espania 23
+USA Mexico 10
+Londres Paris 40
+Paris USA 50

@@ -1,0 +1,46 @@
+# Compilados de C++
+*.out
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+
+# Archivos intermedios y de depuración
+*.log
+*.pch
+*.pdb
+*.idb
+
+# Carpetas de build
+/build/
+/bin/
+/Debug/
+/Release/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.swp
+*.bak
+*.old
+
+# Archivos generados por IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Archivos de CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Ejecutables principales
+grafo
+hashTable
