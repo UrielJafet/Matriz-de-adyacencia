@@ -47,4 +47,12 @@ public:
     void degreeOfExit(const std::string& name_node);
     void adyOfExit(const std::string& name_node);
 
+
+    /*
+        Algoritmo Prim
+        MST = Minimum Spanning Tree
+    */
+    int minKey(const std::vector<int>& key, const std::vector<bool>& inMST);
+    void primMST();
+
 };

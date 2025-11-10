@@ -28,7 +28,6 @@ int main()
     grafo.graphMatrix();
     grafo.degreeOfExit("Paris");
     grafo.adyOfExit("Paris");
-
     
     return 0;
 }
