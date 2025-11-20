@@ -42,6 +42,7 @@ void CGraph :: addEdge(const std::string& origin, const std::string& destiny, in
 
     //Asignamos el valor a la matriz con el indice
     adj_matrix_[index_origin][index_destiny] = weight;
+    adj_matrix_[index_destiny][index_origin] = weight;
 }
 
 void CGraph :: graphMatrix() const{
@@ -54,7 +55,7 @@ void CGraph :: graphMatrix() const{
 
 
     /*--- Imprimir el encabezado (columnas) ---*/
-    std::cout << std::setw(10) << "";
+    std::cout << std::setw(5) << "";
 
     for(int i = 0; i < n_nodes; i++)
     {// Imprime los nombres de los nodos destino
@@ -64,7 +65,7 @@ void CGraph :: graphMatrix() const{
     /*--- Imprimir Filas y Contenido ---*/
     for(int i = 0; i < n_nodes; i++){
         // Imprimir etiqueta de fila (Nodo de Origen)
-        std::cout << std::setw(10) << index_to_name_[i] << "|";
+        std::cout << std::setw(5) << index_to_name_[i] << "|";
         // Imprimir los valores de la matriz
         for(int j = 0; j < n_nodes; j++){
             std::cout << std::setw(10) << adj_matrix_[i][j];
@@ -182,7 +183,7 @@ void CGraph :: adyOfExit(const std::string& name_node)
         std::cerr << "ERROR: El nodo " << name_node << " no exste";
     }
 
-    // Usamos .at() para consuktar el nodo
+    // Usamos .at() para consultar el nodo
     int index_i = node_index_.at(name_node);
     int N = next_node_;
 
@@ -212,4 +213,230 @@ void CGraph :: adyOfExit(const std::string& name_node)
         }
         std::cout << std::endl;
     }
+}
+
+int CGraph :: minKey(const std::vector<int>& key, const std::vector<bool>& inMST)
+{
+    int min = INT_MAX;
+    //inicializamos con el valor más grande posible
+    int minIndex = -1;
+
+    for(int v = 0; v < key.size(); v++)
+    {
+        if(!inMST[v] && key[v] < min){
+            min = key[v];
+            minIndex = v;
+        }
+    }
+
+    return minIndex;
+}
+
+void CGraph :: primMST()
+{
+    int V = node_index_.size();
+
+    std::vector<int> key (V,INT_MAX);
+    std::vector<bool> inMST (V, false);
+    std::vector<int> parent (V, -1);
+
+    key[0] = 0;
+
+    for(int i = 0; i < V-1; i++){
+        int u = minKey(key,inMST);
+        inMST[u] = true;
+
+        for(int j = 0; j < V; j++){
+            if(adj_matrix_[u][j] > 0 && !inMST[j] && adj_matrix_[u][j] < key[j]){
+                parent[j] = u;
+                key[j] = adj_matrix_[u][j];
+            }
+        }
+    }
+
+    int totalWeight = 0;
+    std::cout << "Aristas del Arbol de Expansion Minimo:\n";
+    for (int i = 1; i < V; ++i){
+        std::cout << index_to_name_[parent[i]] << " -- "
+        << key[i]<< " --> "
+        << index_to_name_[i] << std::endl;
+
+        totalWeight += key[i];
+    }
+
+    std::cout << "Peso total del MST: " << totalWeight << std::endl;
+}
+
+void CGraph :: bfs(const std::string& name_node, const std::string& destiny){
+
+    if(node_index_.find(name_node) == node_index_.end() || node_index_.find(destiny) == node_index_.end()){
+        std::cerr << "ERROR: El nodo " << name_node << " no exste";
+    }
+
+    int V = next_node_;
+    int index_i = node_index_.at(name_node);
+    int goal = node_index_.at(destiny);
+    
+    std::vector<bool> visited (V, false);
+    std::queue<int> cola;
+
+    std::cout << "Origen: " << name_node << " -> Destino: " << destiny <<std::endl;
+    std::cout << "En anchura: ";
+
+    visited[index_i] = true;
+    cola.push(index_i);
+
+    std::vector<int> order;
+
+    while(!cola.empty()){
+        int actual = cola.front();
+        cola.pop();
+
+        std::cout << index_to_name_[actual] << ", ";
+
+        if(actual == goal){
+            std:: cout << "\nNodo destino encontrado\n";
+            return;
+        }
+
+        for(int v = 0; v < V; ++v)
+        {
+            if(adj_matrix_[actual][v] > 0 && !visited[v])
+            {
+                visited[v] = true;
+                cola.push(v);
+            }
+        }
+    }
+    std::cout << "\n";
+}
+
+void CGraph :: dfs(const std::string& name_node, const std::string& destiny)
+{
+    if(node_index_.find(name_node) == node_index_.end() || 
+        node_index_.find(destiny) == node_index_.end()){
+        std::cerr << "ERROR: El nodo " << name_node << " no exste";
+    }
+
+    int V = next_node_;
+    int index_i = node_index_.at(name_node);
+    int goal = node_index_.at(destiny);
+    
+    std::vector<bool> visited (V, false);
+    std::stack<int> pila;
+
+    std::cout << "Origen: " << name_node << " -> Destino: " << destiny <<std::endl;
+    std::cout << "En profundidad: ";
+
+    visited[index_i] = true;
+    pila.push(index_i);
+
+    std::vector<int> order;
+
+    while(!pila.empty()){
+        int actual = pila.top();
+        pila.pop();
+
+        std::cout << index_to_name_[actual] << ", ";
+        
+        if(actual == goal){
+            std:: cout << "\nNodo destino encontrado\n";
+            return;
+        }
+    
+        for(int v = 0; v < V; ++v)
+        {
+            if (adj_matrix_[actual][v] > 0 && !visited[v])
+            {
+                visited[v] = true;
+                pila.push(v);
+            }
+        }
+    }
+
+    std::cout << "\n";
+}
+
+
+bool CGraph :: dls(const std::string& name_node, const std::string& destiny, int limit)
+{
+    if(node_index_.find(name_node) == node_index_.end() || 
+        node_index_.find(destiny) == node_index_.end()){
+        std::cerr << "ERROR: El nodo " << name_node << " no exste";
+    }
+
+    int V = next_node_;
+    int index_i = node_index_.at(name_node);
+    int goal = node_index_.at(destiny);
+
+    std::vector<bool> visited(V, false);
+    std::stack<std::pair<int,int>> pila;
+
+    std::cout << "Origen: " << name_node << " (Limit: " << limit << ")" <<" -> Destino: " << destiny <<std::endl;
+    std::cout << "Recorrido DLS: ";
+
+    
+    pila.push({index_i, 0});
+
+    while(!pila.empty())
+    {
+        int actual = pila.top().first;
+        int profundidadActual = pila.top().second;
+        pila.pop();
+
+        if (actual == goal)
+        {
+            std::cout << index_to_name_[actual] << " ";
+            std::cout << "\nMeta encontrada dentro del limite.\n";
+            return true;
+        }
+
+        // Marcar visitados
+        if (!visited[actual]) {
+            visited[actual] = true;
+            std::cout << index_to_name_[actual] << ", ";
+        }
+
+        // Limitar profundidad SOLO para expandir
+        if (profundidadActual < limit)
+        {
+            for (int v = 0; v < V; ++v)
+            {
+                if(adj_matrix_[actual][v] > 0 && !visited[v])
+                {
+                    pila.push({v, profundidadActual + 1});
+                }
+            }
+        }
+    }
+    std::cout << "\nMeta NO encontrada dentro del limite.\n";
+    std::cout << "\n";
+    return false;
+}
+
+void CGraph :: idffs(const std::string& name_node, const std::string& destiny)
+{
+    if(node_index_.find(name_node) == node_index_.end() || 
+        node_index_.find(destiny) == node_index_.end()){
+        std::cerr << "ERROR: El nodo " << name_node << " no exste";
+    }   
+    
+    int max_depth = next_node_;
+
+    for(int limit = 0; limit <= max_depth; ++limit)
+    {
+        std::cout << "\n--- Ejecutando DLS con limite: " << limit <<" -> Destino: " << destiny << " ---\n" <<std::endl;
+
+        bool goal = dls(name_node, destiny, limit);
+
+        if(goal)
+        {
+            std::cout << "Meta encontrada dentro del limite: " << limit << std::endl;
+            return;
+        }
+        
+    }
+
+    std::cout << "\nMeta NO encontrada dentro del limite.\n";
+    std::cout << "\n";
 }

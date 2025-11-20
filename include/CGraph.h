@@ -7,6 +7,9 @@
 #include <iomanip>
 #include <fstream>
 #include <sstream>
+#include <climits>
+#include <queue>
+#include <stack>
 
 class CGraph
 {
@@ -49,10 +52,14 @@ public:
 
 
     /*
-        Algoritmo Prim
+        Algoritmo Prim y recorridos
         MST = Minimum Spanning Tree
     */
     int minKey(const std::vector<int>& key, const std::vector<bool>& inMST);
     void primMST();
+    void bfs(const std::string& name_node, const std::string& destiny);
+    void dfs(const std::string& name_node, const std::string& destiny);
+    bool dls(const std::string& name_node, const std::string& destiny, int limit);
+    void idffs(const std::string& name_node, const std::string& destiny);
 
 };
