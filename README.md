@@ -14,7 +14,13 @@ y analizar la **adyacencia** y el **grado de salida** de cualquier nodo.
 - Guardado del grafo en archivo de texto (`saveGraph`).  
 - Carga desde archivo externo con validación de formato (`importGraph`).  
 - Cálculo del **grado de salida** de un nodo (`degreeOfExit`).  
-- Obtención de la **adyacencia de salida** (`adyOfExit`).  
+- Obtención de la **adyacencia de salida** (`adyOfExit`).
+- Recorridos del grafo:
+  - BFS (Recorrido por anchura).
+  - DFS (Recorrido por profundidad).
+  - DLS (Depth Limited Search).
+  - IDDFS (Iterative Deepening Depth-First Search).
+- Algoritmo de Prim para generar el Árbol de Expansión Mínima.
 
 ---
 
